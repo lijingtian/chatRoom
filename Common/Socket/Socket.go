@@ -28,3 +28,14 @@ func SendMessage(conn net.Conn, message string){
 		conn.Write(buf)
 	}
 }
+
+func GetMessage(conn net.Conn)([]byte){
+	//1. 获取消息的长度
+	buf := make([]byte, 4, 4)
+	conn.Read(buf)
+	bufLen := binary.BigEndian.Uint32(buf)
+	//2. 接收消息
+	newsBuf := make([]byte, bufLen, bufLen)
+	conn.Read(newsBuf)
+	return newsBuf
+}

@@ -1,7 +1,10 @@
 package main
 
 import (
-	"encoding/binary"
+	"chatRoom/Common/Message"
+	"chatRoom/Common/Socket"
+	"chatRoom/server/login"
+	"encoding/json"
 	"fmt"
 	"net"
 )
@@ -24,12 +27,44 @@ func main(){
 
 func process(conn net.Conn) {
 	defer conn.Close()
-	//1. 获取消息的长度
-	buf := make([]byte, 4, 4)
-	conn.Read(buf)
-	bufLen := binary.BigEndian.Uint32(buf)
-	//2. 接收消息
-	newsBuf := make([]byte, bufLen, bufLen)
-	conn.Read(newsBuf)
-	fmt.Println(string(newsBuf))
+	mes := Socket.GetMessage(conn)
+	var socketMessage Message.Message
+	err := json.Unmarshal(mes, &socketMessage)
+	if err != nil{
+		fmt.Println("get message unmarshal err:", err)
+		return
+	}
+	switch socketMessage.Type{
+		case Message.LoginMesType :
+			loginMes, err := login.GetLoginMessage(socketMessage.Data)
+			if err != nil{
+				fmt.Println("server process get login message err:", err)
+				return
+			}
+			var loginResMes Message.LoginResMes
+			isOK := login.CheckLogin(loginMes)
+			if isOK{
+				loginResMes.Code = 200
+				loginResMes.Error = ""
+			} else {
+				loginResMes.Code = 500
+				loginResMes.Error = "user name or password err"
+			}
+			//封装登录返回的消息
+			data, err := json.Marshal(loginResMes)
+			if err != nil{
+				fmt.Println("server process marshal login resmessage err:", err)
+				return
+			}
+			//封装返回的message
+			var mes Message.Message
+			mes.Type = Message.LoginResMesType
+			mes.Data = string(data)
+			data, err = json.Marshal(mes)
+			if err != nil{
+				fmt.Println("server process marshal resmessage err:", err)
+				return
+			}
+			Socket.SendMessage(conn, string(data))
+	}
 }

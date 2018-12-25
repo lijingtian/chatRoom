@@ -18,5 +18,5 @@ type LoginMes struct {
 
 type LoginResMes struct {
 	Code int `json:"code"`	//500用户未注册， 200登录成功
-	Error error `json:"error"`
+	Error string `json:"error"`
 }
