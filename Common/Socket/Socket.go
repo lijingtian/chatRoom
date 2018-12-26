@@ -6,6 +6,11 @@ import (
 	"net"
 )
 
+type Transfer struct {
+	Conn net.Conn
+	Buffer []byte
+}
+
 var Host string = "0.0.0.0:8889"
 func GetConn() (conn net.Conn, err error) {
 	conn, err = net.Dial("tcp", Host)
