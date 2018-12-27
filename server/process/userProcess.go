@@ -13,6 +13,8 @@ import (
 type UserProcess struct {
 	Conn net.Conn
 	Mes Message.Message
+	//该prcess归属的用户名称
+	UserID int
 }
 
 func NewUserProcess(conn net.Conn, mes Message.Message) (*UserProcess){

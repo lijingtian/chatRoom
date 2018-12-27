@@ -38,6 +38,8 @@ func DrawHomeScreen(){
 	} else if key == 2{
 		//注册用户
 		Register()
+	} else if key == 3{
+		return
 	}
 }
 
