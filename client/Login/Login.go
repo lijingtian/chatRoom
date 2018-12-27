@@ -48,3 +48,45 @@ func CheckLogin(userName string, userPwd string) (loginRes Message.LoginResMes, 
 	}
 	return
 }
+
+//检查用户登录是否正确
+func Register(userName string, userPwd string) (loginResMes Message.LoginResMes, err error){
+	conn, err := Socket.GetConn()
+	if err != nil{
+		fmt.Println("tcp dial err:", err)
+	}
+	//按照协议封装数据
+	var registerMes Message.RegisterMes
+	registerMes.UserName = userName
+	registerMes.UserPwd = userPwd
+	data, err := json.Marshal(registerMes)
+	if err != nil{
+		fmt.Println("user check login marshal err:", err)
+		return
+	}
+	var socketMessage Message.Message
+	socketMessage.Type = Message.RegisterMesType
+	socketMessage.Data = string(data)
+
+	data, err = json.Marshal(socketMessage)
+	Socket.SendMessage(conn, string(data))
+	//获取server返回的验证登录信息
+	socketMes := Socket.GetMessage(conn)
+	//解封为Message类型
+	var mes Message.Message
+	err = json.Unmarshal(socketMes, &mes)
+	if err != nil{
+		fmt.Println("register get server message 1 unmarshal err:", err)
+		return
+	}
+	if mes.Type != Message.RegisterMesType{
+		fmt.Println("server message type err")
+		return
+	}
+	err = json.Unmarshal([]byte(mes.Data), &loginResMes)
+	if err != nil{
+		fmt.Println("register get server message 2 unmarshal err:", err)
+		return
+	}
+	return
+}

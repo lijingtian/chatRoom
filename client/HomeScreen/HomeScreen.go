@@ -37,6 +37,7 @@ func DrawHomeScreen(){
 		LoginChatRoom()
 	} else if key == 2{
 		//注册用户
+		Register()
 	}
 }
 
@@ -54,5 +55,21 @@ func LoginChatRoom(){
 		fmt.Println(loginResMes.Error)
 	} else if loginResMes.Code == 200 {
 		fmt.Println("登录成功")
+	}
+}
+func Register(){
+	var userName string
+	var userPwd string
+	fmt.Println("请输入用户名:")
+	fmt.Scanf("%s \n", &userName)
+	fmt.Println("请输入密码")
+	fmt.Scanf("%s \n", &userPwd)
+	loginResMes, err := Login.Register(userName, userPwd)
+	if err != nil {
+		fmt.Println("注册失败", err)
+	} else if loginResMes.Code != 200 {
+		fmt.Println(loginResMes.Error)
+	} else if loginResMes.Code == 200 {
+		fmt.Println("注册成功")
 	}
 }

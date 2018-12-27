@@ -3,6 +3,7 @@ package Message
 const(
 	LoginMesType = "LoginMes"
 	LoginResMesType = "LoginResMes"
+	RegisterMesType = "RegisterMes"
 )
 
 type Message struct {
@@ -12,6 +13,11 @@ type Message struct {
 
 type LoginMes struct {
 	UserID int `json:"userid"`
+	UserPwd string `json:"userpwd"`
+	UserName string `json:"username"`
+}
+
+type RegisterMes struct {
 	UserPwd string `json:"userpwd"`
 	UserName string `json:"username"`
 }
