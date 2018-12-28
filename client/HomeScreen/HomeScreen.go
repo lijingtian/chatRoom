@@ -2,6 +2,7 @@ package HomeScreen
 
 import (
 	"chatRoom/client/Login"
+	"chatRoom/client/process"
 	"fmt"
 )
 
@@ -57,6 +58,7 @@ func LoginChatRoom(){
 		fmt.Println(loginResMes.Error)
 	} else if loginResMes.Code == 200 {
 		fmt.Println("登录成功")
+		chatRoomScreen()
 	}
 }
 func Register(){
@@ -74,4 +76,30 @@ func Register(){
 	} else if loginResMes.Code == 200 {
 		fmt.Println("注册成功")
 	}
+}
+
+func chatRoomScreen(){
+	var key int
+	var loop bool = true
+	for loop{
+		fmt.Println("----------欢迎来到聊天室-------------")
+		fmt.Println("---1. 显示用户在线列表---")
+		fmt.Println("---2. 发送消息---")
+		fmt.Println("---3. 信息列表---")
+		fmt.Println("---4. 退出系统---")
+		fmt.Println("请选择（1-4）")
+		fmt.Scanf("%d\n", &key)
+		chatRoomProcess := process.NewChatRoomProcess()
+		go chatRoomProcess.Process()
+		if key == 1{
+
+		} else if key == 2{
+
+		} else if key == 3{
+
+		} else if key == 4{
+			loop = false
+		}
+	}
+
 }

@@ -39,6 +39,8 @@ func Process(conn net.Conn){
 	case Message.LoginMesType:
 		//登录
 		//userModel = new()
+		loginProcess := process.NewUserProcess(conn, socketMessage)
+		loginProcess.CheckLogin()
 	case Message.RegisterMesType:
 		//注册
 		//registerProcess := process.ProcessFactory[Message.RegisterMesType]
