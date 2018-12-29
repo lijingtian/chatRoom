@@ -3,6 +3,8 @@ package main
 import (
 	"chatRoom/Common/Message"
 	"chatRoom/Common/Socket"
+	"chatRoom/Common/db"
+	"chatRoom/server/model"
 	"chatRoom/server/process"
 	"encoding/json"
 	"fmt"
@@ -10,6 +12,7 @@ import (
 )
 
 func main(){
+	go UserMysqlToRedis()
 	listenHandle, err := net.Listen("tcp", "0.0.0.0:8889")
 	if err != nil{
 		fmt.Println("listen err:", err)
@@ -49,47 +52,21 @@ func Process(conn net.Conn){
 	}
 }
 
-//
-//func process(conn net.Conn) {
-//	defer conn.Close()
-//	mes := Socket.GetMessage(conn)
-//	var socketMessage Message.Message
-//	err := json.Unmarshal(mes, &socketMessage)
-//	if err != nil{
-//		fmt.Println("get message unmarshal err:", err)
-//		return
-//	}
-//	switch socketMessage.Type{
-//		case Message.LoginMesType :
-//			loginMes, err := login.GetLoginMessage(socketMessage.Data)
-//			if err != nil{
-//				fmt.Println("server process get login message err:", err)
-//				return
-//			}
-//			var loginResMes Message.LoginResMes
-//			isOK := login.CheckLogin(loginMes)
-//			if isOK{
-//				loginResMes.Code = 200
-//				loginResMes.Error = ""
-//			} else {
-//				loginResMes.Code = 500
-//				loginResMes.Error = "user name or password err"
-//			}
-//			//封装登录返回的消息
-//			data, err := json.Marshal(loginResMes)
-//			if err != nil{
-//				fmt.Println("server process marshal login resmessage err:", err)
-//				return
-//			}
-//			//封装返回的message
-//			var mes Message.Message
-//			mes.Type = Message.LoginResMesType
-//			mes.Data = string(data)
-//			data, err = json.Marshal(mes)
-//			if err != nil{
-//				fmt.Println("server process marshal resmessage err:", err)
-//				return
-//			}
-//			Socket.SendMessage(conn, string(data))
-//	}
-//}
+func UserMysqlToRedis(){
+	rows, err := db.MysqlDBPool.Query("SELECT id,user_name,user_pwd FROM user")
+	if err != nil{
+		fmt.Println("main 56 err:", err)
+		return
+	}
+	defer rows.Close()
+	for rows.Next(){
+		userModel := model.NewUserModel("", "")
+		rows.Scan(&userModel.UserID, &userModel.UserName, &userModel.UserPwd)
+		userInfo, err := json.Marshal(userModel)
+		if err != nil{
+			fmt.Println("main 66 err", err)
+			continue
+		}
+		db.NewRedisModel().Conn.Do("Hset", "userInfo", userModel.UserName, string(userInfo))
+	}
+}

@@ -3,7 +3,6 @@ package process
 import (
 	"chatRoom/Common/Message"
 	"chatRoom/Common/Socket"
-	"chatRoom/server/login"
 	"chatRoom/server/model"
 	"encoding/json"
 	"fmt"
@@ -25,25 +24,28 @@ func NewUserProcess(conn net.Conn, mes Message.Message) (*UserProcess){
 }
 
 func(this *UserProcess) CheckLogin(){
-	loginMes, err := login.GetLoginMessage(this.Mes.Data)
-	if err != nil{
-		fmt.Println("server process get login message err:", err)
-		return
-	}
-
+	//loginMes, err := login.GetLoginMessage(this.Mes.Data)
+	//if err != nil{
+	//	fmt.Println("server process get login message err:", err)
+	//	return
+	//}
 	//处理登录
-	userModel := model.NewUserModel(loginMes.UserName, loginMes.UserPwd)
-	isOK, _ := userModel.CheckLogin()
-	var loginResMes Message.LoginResMes
+	userModel := model.NewUserModel("", "")
+	isOK, _ := userModel.CheckLogin(this.Mes.Data)
+	var code, errStr string
+	//var loginResMes Message.LoginResMes
 	if isOK{
-		loginResMes.Code = 200
-		loginResMes.Error = ""
+		code = "200"
+		errStr = ""
 	} else {
-		loginResMes.Code = 500
-		loginResMes.Error = "user name or password err"
+		code = "500"
+		errStr = "user name or password err"
 	}
+	loginResMesModel := Message.MessageFactory[Message.LoginResMesType]
+	loginResMesModel.ModelInit(code, errStr)
+	data, err := loginResMesModel.Encode()
 	//封装登录返回的消息
-	data, err := json.Marshal(loginResMes)
+	//data, err := json.Marshal(loginResMes)
 	if err != nil{
 		fmt.Println("server process marshal login resmessage err:", err)
 		return

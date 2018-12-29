@@ -2,6 +2,7 @@
 package model
 
 import (
+	"chatRoom/Common/Message"
 	"chatRoom/Common/db"
 	"chatRoom/Common/util"
 	"database/sql"
@@ -28,7 +29,18 @@ func NewUserModel(username string, userpwd string)(*UserModel){
  * @return isOK 登录是否成功 true-登录成功 false-登录失败
  * @err 登录过程中产生的异常
 */
-func (this *UserModel) CheckLogin()(isOK bool, err error){
+func (this *UserModel) CheckLogin(data string)(isOK bool, err error){
+	//解析登录信息
+	loginMesModel := Message.MessageFactory[Message.LoginMesType]
+	loginMesModel.DeCode(data)
+	loginMes, ok := loginMesModel.(*Message.LoginMes)
+	if !ok{
+		fmt.Println("user 38 err:", err)
+		return
+	}
+	this.UserName = loginMes.UserName
+	this.UserPwd = loginMes.UserPwd
+
 	redisModel := db.NewRedisModel()
 	userInfo, err := redisModel.Conn.Do("Hget", "userInfo", this.UserName)
 	if err != nil{

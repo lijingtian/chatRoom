@@ -1,6 +1,12 @@
 package Message
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 const(
+	MessageType = "message"
 	LoginMesType = "LoginMes"
 	LoginResMesType = "LoginResMes"
 	RegisterMesType = "RegisterMes"
@@ -12,11 +18,28 @@ type Message struct {
 	Data string `json:"data"`
 }
 
-//用户登录消息体
-type LoginMes struct {
-	UserID int `json:"userid"`
-	UserPwd string `json:"userpwd"`
-	UserName string `json:"username"`
+func NewMessage()(*Message){
+	return &Message{}
+}
+
+func(this *Message) ModelInit(args []string){
+	this.Type = args[0]
+	this.Data = args[1]
+}
+
+func(this *Message) Encode() (mes string, err error){
+	data, err := json.Marshal(this)
+	mes = string(data)
+	return
+}
+
+func(this *Message) DeCode(data string)(err error){
+	err = json.Unmarshal([]byte(data), this)
+	if err != nil{
+		fmt.Println("message decode err:", err)
+		return 
+	}
+	return nil
 }
 
 //用户登录聊天室时，连接服务器消息体
@@ -24,16 +47,4 @@ type CToSMes struct {
 	UserID int `json:"userid"`
 	UserPwd string `json:"userpwd"`
 	UserName string `json:"username"`
-}
-
-//注册用户消息体
-type RegisterMes struct {
-	UserPwd string `json:"userpwd"`
-	UserName string `json:"username"`
-}
-
-//服务器应答消息体
-type LoginResMes struct {
-	Code int `json:"code"`	//500用户未注册， 200登录成功
-	Error string `json:"error"`
 }

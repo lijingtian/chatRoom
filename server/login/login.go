@@ -14,12 +14,3 @@ func GetLoginMessage(mes string) (loginMes Message.LoginMes, err error) {
 	}
 	return loginMes, nil
 }
-
-func CheckLogin(loginMes Message.LoginMes)(isOk bool){
-	if loginMes.UserName == "abc" && loginMes.UserPwd == "123"{
-		isOk = true
-	} else {
-		isOk = false
-	}
-	return
-}
