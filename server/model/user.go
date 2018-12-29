@@ -23,15 +23,27 @@ func NewUserModel(username string, userpwd string)(*UserModel){
 	}
 }
 
+/*
+ * 验证用户登录时的账号密码是否正确
+ * @return isOK 登录是否成功 true-登录成功 false-登录失败
+ * @err 登录过程中产生的异常
+*/
 func (this *UserModel) CheckLogin()(isOK bool, err error){
 	redisModel := db.NewRedisModel()
-	userInfo, err := json.Marshal(this)
+	userInfo, err := redisModel.Conn.Do("Hget", "userInfo", this.UserName)
 	if err != nil{
-		fmt.Println("user model json marshal err:", err)
+		fmt.Println("user.go 30 err:", err)
 		return
 	}
-	redisModel.Conn.Do("Hset", "userInfo", string(userInfo))
-
+	var redisUserInfo *UserModel = new(UserModel)
+	err = json.Unmarshal(userInfo.([]byte), redisUserInfo)
+	if err != nil{
+		fmt.Println("user.go 36 err:", err)
+		return
+	}
+	if redisUserInfo.UserPwd == this.UserPwd{
+		isOK = true
+	}
 	return
 }
 
@@ -61,7 +73,7 @@ func (this *UserModel) Register()(isOK bool, err error){
 		fmt.Println("user.go 59 err:", err)
 		return
 	}
-	_, err = redisModel.Conn.Do("Hset", "userInfo", this.UserID, string(userInfo))
+	_, err = redisModel.Conn.Do("Hset", "userInfo", this.UserName, string(userInfo))
 	if err != nil{
 		fmt.Println("user model register hset redis err:", err)
 		return

@@ -75,6 +75,7 @@ func Register(){
 		fmt.Println(loginResMes.Error)
 	} else if loginResMes.Code == 200 {
 		fmt.Println("注册成功")
+		DrawHomeScreen()
 	}
 }
 

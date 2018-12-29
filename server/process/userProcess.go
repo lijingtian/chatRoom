@@ -30,8 +30,11 @@ func(this *UserProcess) CheckLogin(){
 		fmt.Println("server process get login message err:", err)
 		return
 	}
+
+	//处理登录
+	userModel := model.NewUserModel(loginMes.UserName, loginMes.UserPwd)
+	isOK, _ := userModel.CheckLogin()
 	var loginResMes Message.LoginResMes
-	isOK := login.CheckLogin(loginMes)
 	if isOK{
 		loginResMes.Code = 200
 		loginResMes.Error = ""
