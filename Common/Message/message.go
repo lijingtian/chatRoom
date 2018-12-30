@@ -11,7 +11,9 @@ const(
 	LoginResMesType = "LoginResMes"
 	RegisterMesType = "RegisterMes"
 	ServerNotifyType = "ServerNotify"
-	UserStatusNotifyType = "UserStatusNotifyType"
+	UserStatusNotifyType = "UserStatusNotifyMes"
+	GetAllOnlineUserType = "GetAllOnlineUserMes"
+	GetAllOnlineUserResType = "GetAllOnlineUserResMes"
 )
 
 //服务器客户端通用消息体

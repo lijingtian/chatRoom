@@ -1,9 +1,9 @@
 package main
 
 import (
-	"chatRoom/client/HomeScreen"
+	"chatRoom/client/process"
 )
 
 func main()  {
-	HomeScreen.DrawHomeScreen()
+	process.DrawScreenProcess.DrawHomeScreen()
 }

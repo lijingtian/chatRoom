@@ -4,6 +4,7 @@ import (
 	"chatRoom/Common/Message"
 	"chatRoom/Common/Socket"
 	"chatRoom/server/model"
+	"encoding/json"
 	"fmt"
 	"net"
 	"strconv"
@@ -161,13 +162,44 @@ func (this *UserProcess) NotifyUserOnlineToClient(){
 			return
 		}
 	}
-	fmt.Println(userMgr.GetAllOnlineUser())
 	for uid, up := range userMgr.GetAllOnlineUser(){
-		fmt.Println(uid)
-		fmt.Println(this.UserID)
 		//不给自己发
 		if uid != this.UserID{
 			Socket.SendMessage(up.Conn, data)
 		}
 	}
+}
+
+/*
+ * 将当前的所有在线用户列表发送给客户端
+*/
+
+func (this *UserProcess) SendAllOnlineUserToC(){
+	allUserSN := make([]string, 10)
+	//获取所有在线用户
+	for _, up := range userMgr.GetAllOnlineUser(){
+		tempSNModel := Message.UserStatusNotify{
+			UserID: up.UserID,
+			UserName:up.UserName,
+			UserStatus:Message.UserStatusNotifyOnlineStatus,
+		}
+		tempStr, _ := json.Marshal(tempSNModel)
+		allUserSN = append(allUserSN, string(tempStr))
+	}
+	data, err := json.Marshal(allUserSN)
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	mesStr, err := Message.MesEncode([]string{Message.ServerNotifyType,Message.GetAllOnlineUserResType, string(data)})
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	mesStr, err = Message.MesEncode([]string{Message.MessageType, Message.ServerNotifyType, mesStr})
+	if err != nil{
+		fmt.Println(err)
+		return
+	}
+	Socket.SendMessage(this.Conn, mesStr)
 }

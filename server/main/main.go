@@ -25,30 +25,34 @@ func main(){
 			continue
 		}
 		go Process(conn)
+
 	}
 }
 
 func Process(conn net.Conn){
-	//defer conn.Close()
-	mes := Socket.GetMessage(conn)
-	var socketMessage Message.Message
-	err := json.Unmarshal(mes, &socketMessage)
-	if err != nil{
-		fmt.Println("get message unmarshal err:", err)
-		return
-	}
-
-	switch socketMessage.Type {
-	case Message.LoginMesType:
-		//登录
-		//userModel = new()
-		loginProcess := process.NewUserProcess(conn, socketMessage)
-		loginProcess.CheckLogin()
-	case Message.RegisterMesType:
-		//注册
-		//registerProcess := process.ProcessFactory[Message.RegisterMesType]
-		registerProcess := process.NewUserProcess(conn, socketMessage)
-		registerProcess.Register()
+	defer conn.Close()
+	for{
+		mes := Socket.GetMessage(conn)
+		var socketMessage Message.Message
+		err := json.Unmarshal(mes, &socketMessage)
+		if err != nil{
+			fmt.Println("get message unmarshal err:", err)
+			break
+		}
+		switch socketMessage.Type {
+		case Message.LoginMesType:
+			//登录
+			loginProcess := process.NewUserProcess(conn, socketMessage)
+			loginProcess.CheckLogin()
+		case Message.RegisterMesType:
+			//注册
+			registerProcess := process.NewUserProcess(conn, socketMessage)
+			registerProcess.Register()
+		case Message.GetAllOnlineUserType:
+			//获取全部的在线用户
+			registerProcess := process.NewUserProcess(conn, socketMessage)
+			registerProcess.SendAllOnlineUserToC()
+		}
 	}
 }
 
