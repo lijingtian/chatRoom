@@ -20,11 +20,11 @@ func init(){
 	}
 }
 
-func (this *UserMgr) AddOnlineUser(up UserProcess){
-	this.onlineUsers[up.UserID] = &up
+func (this *UserMgr) AddOnlineUser(up *UserProcess){
+	this.onlineUsers[up.UserID] = up
 }
 
-func (this *UserMgr) DeleteOnlineUser(up UserProcess){
+func (this *UserMgr) DeleteOnlineUser(up *UserProcess){
 	delete(this.onlineUsers, up.UserID)
 }
 

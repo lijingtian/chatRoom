@@ -13,4 +13,6 @@ func init(){
 	MessageFactory[LoginMesType] = NewLoginMes()
 	MessageFactory[LoginResMesType] = NewLoginResMes()
 	MessageFactory[RegisterMesType] = NewRegisterMes()
+	MessageFactory[ServerNotifyType] = NewServerNotify()
+	MessageFactory[UserStatusNotifyType] = NewUserStatusNotify()
 }

@@ -10,6 +10,8 @@ const(
 	LoginMesType = "LoginMes"
 	LoginResMesType = "LoginResMes"
 	RegisterMesType = "RegisterMes"
+	ServerNotifyType = "ServerNotify"
+	UserStatusNotifyType = "UserStatusNotifyType"
 )
 
 //服务器客户端通用消息体
@@ -40,11 +42,4 @@ func(this *Message) DeCode(data string)(err error){
 		return 
 	}
 	return nil
-}
-
-//用户登录聊天室时，连接服务器消息体
-type CToSMes struct {
-	UserID int `json:"userid"`
-	UserPwd string `json:"userpwd"`
-	UserName string `json:"username"`
 }

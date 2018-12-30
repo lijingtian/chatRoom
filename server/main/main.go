@@ -29,7 +29,7 @@ func main(){
 }
 
 func Process(conn net.Conn){
-	defer conn.Close()
+	//defer conn.Close()
 	mes := Socket.GetMessage(conn)
 	var socketMessage Message.Message
 	err := json.Unmarshal(mes, &socketMessage)
