@@ -15,4 +15,5 @@ func init(){
 	MessageFactory[RegisterMesType] = NewRegisterMes()
 	MessageFactory[ServerNotifyType] = NewServerNotify()
 	MessageFactory[UserStatusNotifyType] = NewUserStatusNotify()
+	MessageFactory[GroupMesType] = NewGroupMes()
 }

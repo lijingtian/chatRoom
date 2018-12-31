@@ -52,6 +52,9 @@ func Process(conn net.Conn){
 			//获取全部的在线用户
 			registerProcess := process.NewUserProcess(conn, socketMessage)
 			registerProcess.SendAllOnlineUserToC()
+		case Message.GroupMesType:
+			process := process.NewSmsProcess(string(mes))
+			process.TranferGroupMes()
 		}
 	}
 }

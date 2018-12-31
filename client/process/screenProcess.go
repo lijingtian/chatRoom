@@ -31,7 +31,7 @@ func(this *DrawScreen) ChatRoomScreen(){
 			fmt.Println("请输入要发送的消息：")
 			var mes string
 			fmt.Scanf("%s\n", &mes)
-
+			SmsProcessModel.SendGroupMes(mes)
 		} else if key == 3{
 
 		} else if key == 4{

@@ -15,9 +15,7 @@ import (
 type UserProcess struct {
 	Conn net.Conn
 }
-func SendGroupMes(mes string){
-	
-}
+
 
 
 
@@ -145,6 +143,10 @@ func (this *UserProcess) WaitServerNotify(){
 		if !ok{
 			fmt.Println("home screen 129 err:", err)
 			break
+		}
+		if mesModel.Type == Message.GroupMesType {
+			SmsProcessModel.GetGroupMes(mesModel.Data)
+			continue
 		}
 		if mesModel.Type != Message.ServerNotifyType{
 			fmt.Println("接收来自服务器的消息类型异常")

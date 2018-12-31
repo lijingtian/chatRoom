@@ -14,6 +14,8 @@ const(
 	UserStatusNotifyType = "UserStatusNotifyMes"
 	GetAllOnlineUserType = "GetAllOnlineUserMes"
 	GetAllOnlineUserResType = "GetAllOnlineUserResMes"
+	GroupMesType = "GroupMes"
+	GroupResMesType = "GroupResMes"
 )
 
 //服务器客户端通用消息体
@@ -41,7 +43,7 @@ func(this *Message) DeCode(data string)(err error){
 	err = json.Unmarshal([]byte(data), this)
 	if err != nil{
 		fmt.Println("message decode err:", err)
-		return 
+		return
 	}
 	return nil
 }
