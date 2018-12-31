@@ -16,9 +16,6 @@ type UserProcess struct {
 	Conn net.Conn
 }
 
-
-
-
 //检查用户登录是否正确
 func(this *UserProcess) CheckLogin(userName string, userPwd string){
 	var err error
@@ -72,7 +69,7 @@ func(this *UserProcess) CheckLogin(userName string, userPwd string){
 		fmt.Println("登录成功")
 		go this.WaitServerNotify()
 		this.SendAllOnlineUserReqToServer()
-		DrawScreenProcess.ChatRoomScreen()
+		DrawScreenProcess.ChatRoomScreen(userName)
 	}
 	return
 }

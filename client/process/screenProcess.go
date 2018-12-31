@@ -11,16 +11,16 @@ func init(){
 	DrawScreenProcess = new(DrawScreen)
 }
 
-func(this *DrawScreen) ChatRoomScreen(){
+func(this *DrawScreen) ChatRoomScreen(userName string){
 	var key int
 	var loop bool = true
 	for loop{
-		fmt.Println("----------欢迎来到聊天室-------------")
+		fmt.Printf("----------欢迎 %s 来到聊天室-------------\n", userName)
 		fmt.Println("---1. 显示用户在线列表---")
-		fmt.Println("---2. 发送消息---")
+		fmt.Println("---2. 进入聊天模式---")
 		fmt.Println("---3. 信息列表---")
 		fmt.Println("---4. 退出系统---")
-		fmt.Println("请选择（1-4）")
+		fmt.Println("请选择（1-4)")
 		fmt.Scanf("%d\n", &key)
 		if key == 1{
 			userList := model.UserListModel.GetUserList()
@@ -28,10 +28,18 @@ func(this *DrawScreen) ChatRoomScreen(){
 				fmt.Printf("%s | 在线\n", model.UserName)
 			}
 		} else if key == 2{
-			fmt.Println("请输入要发送的消息：")
-			var mes string
-			fmt.Scanf("%s\n", &mes)
-			SmsProcessModel.SendGroupMes(mes)
+			fmt.Println("请输入要发送的消息(输入exit退出聊天模式)：")
+			var loopS = true
+			for loopS{
+				var mes string
+				fmt.Scanf("%s\n", &mes)
+				if mes == "exit"{
+					loopS = false
+				} else {
+					SmsProcessModel.SendGroupMes(userName + ": " + mes)
+				}
+			}
+
 		} else if key == 3{
 
 		} else if key == 4{
