@@ -7,7 +7,6 @@ import (
 )
 
 var MysqlDBPool *sql.DB
-var mysqlDSN string = "root:@tcp(127.0.0.1:3306)/chatRoom?charset=utf8"
 
 func init(){
 	var err error
