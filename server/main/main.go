@@ -4,13 +4,15 @@ import (
 	"chatRoom/Common/Message"
 	"chatRoom/Common/Socket"
 	"chatRoom/Common/db"
+	runLog "chatRoom/Common/log"
 	"chatRoom/server/model"
 	"chatRoom/server/process"
 	"encoding/json"
 	"fmt"
+	"github.com/logrus"
 	"net"
 )
-
+var log = runLog.CommonLog
 func main(){
 	go UserMysqlToRedis()
 	listenHandle, err := net.Listen("tcp", "0.0.0.0:8889")
@@ -62,7 +64,9 @@ func Process(conn net.Conn){
 func UserMysqlToRedis(){
 	rows, err := db.MysqlDBPool.Query("SELECT id,user_name,user_pwd FROM user")
 	if err != nil{
-		fmt.Println("main 56 err:", err)
+		log.WithFields(logrus.Fields{
+			"err" : err,
+		}).Warn("select db error")
 		return
 	}
 	defer rows.Close()

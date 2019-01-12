@@ -1,8 +1,10 @@
 package util
 
 import (
+	"chatRoom/Common/log"
 	"errors"
 	"fmt"
+	"github.com/logrus"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -15,13 +17,16 @@ var runOSType = runtime.GOOS
 /**
  * 根据当前时区，获取当前时间
 */
-func GetNowTime()(time.Time, error){
+func GetNowTime()(timeNow time.Time, err error){
 	local, err := time.LoadLocation("Local")
 	if err != nil{
-		fmt.Println("utilFunc.go 11 err:", err)
+		log.CommonLog.WithFields(logrus.Fields{
+			"err": err,
+		}).Warn("load local time zone err")
+		return
 	}
-	var timeNow time.Time = time.Now().In(local)
-	return timeNow, nil
+	timeNow = time.Now().In(local)
+	return
 }
 
 /**
@@ -71,4 +76,23 @@ func Substr(str string, pos int, length int)(resStr string, err error){
 		resStr = str[pos:pos+length]
 	}
 	return
+}
+
+/**
+ * 判断路径是否存在，如果不存在，则创建
+ * @param path string 路径
+ * @return error err 执行过程中出现的问题
+*/
+func CreateDir(path string) (err error) {
+	_, err = os.Stat(path)
+	if err == nil {
+		//目录已经存在
+		return err
+	}
+	if os.IsNotExist(err) {
+		//目录不存在,创建
+		err = os.MkdirAll(path, 0755)
+		return err
+	}
+	return err
 }
