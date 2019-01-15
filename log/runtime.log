@@ -1,6 +1,1 @@
-{"animal":"walrus","level":"info","msg":"A walrus appears","time":"2019-01-12T15:26:19+08:00"}
-{"animal":"walrus","level":"info","msg":"A walrus appears","time":"2019-01-12 20:30:54"}
-{"animal":"walrus","level":"info","msg":"A walrus appears","time":"2019-01-12 20:43:53"}
-{"animal":"walrus","level":"info","msg":"A walrus appears","time":"2019-01-12 20:47:12"}
-{"db_path":"E:\\GO_work\\src\\chatRoom/config/db.ini","err":"open E:\\GO_work\\src\\chatRoom/config/db.ini: The system cannot find the file specified.","level":"warning","msg":"db.ini no find","time":"2019-01-12 20:48:08"}
-{"animal":"walrus","level":"info","msg":"A walrus appears","time":"2019-01-12 20:48:09"}
+{"appName":"chatRoom","err":"dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it.","level":"warning","msg":"select db error","time":"2019-01-15 23:10:37"}

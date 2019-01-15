@@ -7,6 +7,17 @@ import (
 	"os"
 )
 
+type DefaultFieldsHook struct {
+
+}
+
+func (df *DefaultFieldsHook) Fire(entry *logrus.Entry) error {
+	entry.Data["appName"] = "chatRoom"
+	return nil
+}
+func (df *DefaultFieldsHook) Levels() []logrus.Level {
+	return logrus.AllLevels
+}
 
 var CommonLog = logrus.New()
 
@@ -14,6 +25,7 @@ func init(){
 	CommonLog.Formatter = &logrus.JSONFormatter{
 		TimestampFormat: util.YMDHIS,
 	}
+	CommonLog.AddHook(&DefaultFieldsHook{})
 	rootPath, err := util.GetRootDir()
 	fmt.Println(rootPath)
 	if err != nil{

@@ -1,10 +1,8 @@
 package util
 
 import (
-	"chatRoom/Common/log"
 	"errors"
 	"fmt"
-	"github.com/logrus"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -20,9 +18,6 @@ var runOSType = runtime.GOOS
 func GetNowTime()(timeNow time.Time, err error){
 	local, err := time.LoadLocation("Local")
 	if err != nil{
-		log.CommonLog.WithFields(logrus.Fields{
-			"err": err,
-		}).Warn("load local time zone err")
 		return
 	}
 	timeNow = time.Now().In(local)
